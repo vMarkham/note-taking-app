@@ -1,24 +1,22 @@
 // src/components/SignIn.tsx
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const signIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithPopup(auth, provider);
       // Redirect or update app state on successful sign-in.
       if (auth.currentUser) {
         console.log(auth.currentUser);
+        console.log("User is signed in with Google!");
         navigate("/notes");
-        // Redirect or update app state on successful sign-in.
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -30,21 +28,14 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <form onSubmit={signIn}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Sign In</button>
-    </form>
+    <div>
+      <button
+        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        onClick={signInWithGoogle}
+      >
+        Sign In with Google
+      </button>
+    </div>
   );
 };
 

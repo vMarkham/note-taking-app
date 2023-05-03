@@ -2,7 +2,16 @@
 import { collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { firestore } from './firebase';
 
-interface NoteData {
+export interface NoteData {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: Timestamp;
+  owner: string;
+  sharedWith: string[];
+}
+
+export interface NewNoteData {
   title: string;
   content: string;
   createdAt: Timestamp;
@@ -15,7 +24,7 @@ export const createNote = async (
   content: string,
   uid: string
 ): Promise<string> => {
-  const noteData: NoteData = {
+  const noteData: NewNoteData = {
     title,
     content,
     createdAt: Timestamp.now(),
